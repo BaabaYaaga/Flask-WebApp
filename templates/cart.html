@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cart</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/bg.png") }}');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            margin-top: 80px;
+        }
+        .btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+ <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('user_dashboard') }}">User Dashboard</a>
+        <div class="btn-group">
+            <a href="{{ url_for('profile') }}" class="btn btn-secondary">Profile</a>
+            <a href="{{ url_for('cart') }}" class="btn btn-secondary">Cart</a>
+            <a href="{{ url_for('logout_user') }}" class="btn btn-secondary">Logout</a>
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="container">
+        <h1>Your Cart</h1>
+        <form method="post" action="{{ url_for('checkout') }}">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Item Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.category }}</td>
+                        <td>{{ item.name }}</td>
+                        <td class="item-price">{{ item.price }}</td>
+                        <td>
+                            <input type="number" name="quantity_{{ item.name }}" value="{{ item.quantity }}" min="1" class="quantity">
+                        </td>
+                        <td class="total-price">{{ item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h3>Total: ₹ <span id="grand-total">{{ total_price }}</span></h3>
+            <button type="submit" class="btn btn-primary">Buy</button>
+        </form>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+        // Update Total Price and Grand Total
+        document.addEventListener("DOMContentLoaded", function() {
+            const quantityInputs = document.querySelectorAll(".quantity");
+            quantityInputs.forEach(function(input) {
+                input.addEventListener("input", function(e) {
+                    const row = e.target.closest("tr");
+                    const price = parseFloat(row.querySelector(".item-price").textContent);
+                    const quantity = parseInt(e.target.value);
+                    const totalPriceCell = row.querySelector(".total-price");
+                    const newTotalPrice = price * quantity;
+                    totalPriceCell.textContent = newTotalPrice.toFixed(2);
+
+                    // Update Grand Total
+                    let grandTotal = 0;
+                    document.querySelectorAll(".total-price").forEach(function(cell) {
+                        grandTotal += parseFloat(cell.textContent);
+                    });
+                    document.querySelector("#grand-total").textContent = grandTotal.toFixed(2);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

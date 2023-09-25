@@ -1,0 +1,44 @@
+body::after {
+    content: "";
+    background: url('images/bg.png');
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+.main-navbar {
+  background-color: #99667b;
+  border-radius: 15px;
+  margin: 10px;
+  color: #FFFFFF;
+}
+
+.nav-link {
+color: #FFFFFF;
+}
+
+.navbar-brand {
+color: #FFFFFF;
+}
+
+.header-row {
+  background-color: #99667b; /* Bootstrap's primary color with 50% transparency */
+}
+
+.btn-buy {
+  background-color: #99667b !important;
+
+}
+
+.btn-buy:hover,
+.btn-buy:focus,
+.btn-buy:active {
+  background-color: #99669b !important;
+  border-color: #99669b !important;
+}
+
+

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manager Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+    body {
+        background-image: url('{{ url_for("static", filename="images/bg.png") }}');
+        background-size: cover;
+        background-attachment: fixed;
+    }
+    .container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .narrow-field {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    .main-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+    }
+    .card {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        width: 100%;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    form {
+        margin-bottom: 20px;
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">Manager Dashboard</a>
+        <div class="btn-group">
+           <a class="btn btn-secondary" href="{{ url_for('summary') }}">Summary</a>
+            <a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="main-content-wrapper">
+        <div class="container">
+            <form method="post">
+                <input type="text" name="new_category" placeholder="Enter new category">
+                <input type="submit" value="+">
+            </form>
+
+            {% if categories %}
+    {% for category, products in categories.items() %}
+        <div class="card">
+            <div class="card">
+            <form action="{{ url_for('update_category', category=category) }}" method="post">
+                <input type="text" name="updated_category_name" placeholder="New category name">
+                <input type="submit" value="Update Category Name">
+            </form>
+            <h2 class="card-header">{{ category }}</h2>
+            <div class="row">
+                {% for product in products %}
+                    <div class="col-md-4">
+                        <div class="card my-2">
+                            <div class="card-body">
+
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text">Price: {{ product.rate_per_unit }}</p>
+                                <p class="card-text">Quantity: {{ product.quantity or 'Not available' }}</p> <!-- Display quantity -->
+                                <a href="{{ url_for('edit_product', category=category, product_id=product.id) }}" class="btn btn-primary">Edit</a>
+                                <a href="{{ url_for('delete_product', product_id=product.id) }}" class="btn btn-secondary">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="card-footer">
+                <a href="{{ url_for('delete_category', category=category) }}" class="btn btn-danger">Delete Category</a>
+            </div>
+        </div>
+        <a href="{{ url_for('add_product', category=category) }}" class="btn btn-primary mt-2">Add Product</a>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">No Categories</h4>
+        <p>No categories have been created yet. Please add some to proceed.</p>
+      </div>
+{% endif %}
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

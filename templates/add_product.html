@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Product</title>
+
+    <style>
+    body {
+        background-image: url('{{ url_for("static", filename="images/bg.png") }}');
+        background-size: cover;
+        background-attachment: fixed;
+    }
+    .container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+    }
+    .narrow-field {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    .main-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: calc(100vh - 60px);  /* Adjust based on your navbar height */
+    }
+    .card {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        width: 80%;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+    display: block;  /* Makes the label a block element */
+    font-weight: bold;
+    margin-bottom: 5px;
+    }
+
+    .form-group input {
+        display: block;  /* Makes the input a block element */
+        width: 90%;
+        padding: 8px;
+        margin-bottom: 15px;
+    }
+
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="main-content-wrapper">
+        <div class="container">
+            <h1>Creating a new product in category: {{ category }}</h1>
+
+            <form method="post">
+                <div class="form-group">
+                    <label for="product_name">Product Name</label>
+                    <input type="text" id="product_name" name="product_name" placeholder="Product Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="unit">Unit</label>
+                    <input type="text" id="unit" name="unit" placeholder="Unit" required>
+                </div>
+                <div class="form-group">
+                    <label for="rate">Rate/Unit</label>
+                    <input type="text" id="rate" name="rate" placeholder="Rate/Unit" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="text" id="quantity" name="quantity" placeholder="Quantity" required>
+                </div>
+                <div class="form-group">
+                    <label for="manufacturing_date">Manufacturing Date</label>
+                    <input type="date" id="manufacturing_date" name="manufacturing_date" placeholder="Manufacturing Date" required>
+                </div>
+                <div class="form-group">
+                    <label for="expiry_date">Expiry Date</label>
+                    <input type="date" id="expiry_date" name="expiry_date" placeholder="Expiry Date" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</html>
+

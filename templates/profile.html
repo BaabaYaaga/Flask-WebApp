@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User Profile</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/bg.png") }}');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .container {
+             background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            margin-top: 80px;
+            display: flex;           /* Enables Flexbox */
+            flex-direction: column;   /* Stack children vertically */
+            justify-content: center;  /* Center children vertically */
+            align-items: center;      /* Center children horizontally */
+            min-height: 60vh;         /* Give it some height */
+        }
+        .btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('user_dashboard') }}">User Dashboard</a>
+        <div class="btn-group">
+            <a href="{{ url_for('profile') }}" class="btn btn-secondary">Profile</a>
+            <a href="{{ url_for('cart') }}" class="btn btn-secondary">Cart</a>
+            <a href="{{ url_for('logout_user') }}" class="btn btn-secondary">Logout</a>
+        </div>
+    </nav>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+  <div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container">
+      <h1>Edit Profile</h1>
+      <form action="{{ url_for('update_profile') }}" method="post">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" class="form-control" value="{{ current_username }}" required readonly>
+        </div>
+        <div class="form-group">
+          <label for="password">New Password:</label>
+          <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm_password">Confirm New Password:</label>
+          <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <input type="submit" value="Update Profile" class="btn btn-primary">
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

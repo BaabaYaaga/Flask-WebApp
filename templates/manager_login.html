@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manager Login</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: url('{{ url_for("static", filename="images/bg.png") }}');
+      background-size: cover;
+      background-attachment: fixed;
+    }
+    .container {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .narrow-field {
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+{% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  <div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container">
+      <h1 class="text-center">Manager Login</h1>
+      <form action="/manager_login" method="POST">
+        <div class="form-group row justify-content-center">
+          <div class="col-md-6 narrow-field">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+          </div>
+        </div>
+        <div class="form-group row justify-content-center">
+          <div class="col-md-6 narrow-field">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+        </div>
+        <div class="form-group text-center">
+          <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

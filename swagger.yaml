@@ -1,0 +1,16 @@
+basePath: /
+consumes:
+- application/json
+info:
+  title: API
+  version: '1.0'
+paths: {}
+produces:
+- application/json
+responses:
+  MaskError:
+    description: When any error occurs on mask
+  ParseError:
+    description: When a mask can't be parsed
+swagger: '2.0'
+tags: []

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/bg.png") }}');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: rgba(255, 182, 182, 0.5);
+            padding: 20px;
+            margin-top: 80px;
+        }
+        .btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('user_dashboard') }}">User Dashboard</a>
+        <div class="btn-group">
+            <a href="{{ url_for('profile') }}" class="btn btn-secondary">Profile</a>
+            <a href="{{ url_for('cart') }}" class="btn btn-secondary">Cart</a>
+            <a href="{{ url_for('logout_user') }}" class="btn btn-secondary">Logout</a>
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="container">
+    <form action="{{ url_for('user_dashboard') }}" method="get">
+        <input type="text" name="price" placeholder="Enter max price">
+        <select name="category">
+            <option value="">--Select Category--</option>
+            {% for category in categories.keys() %}
+                <option value="{{ category }}">{{ category }}</option>
+            {% endfor %}
+        </select>
+        <input type="date" name="min_expiry_date" placeholder="Enter Min Expiry Date">
+        <input type="submit" value="Search">
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">Clear</a>
+    </form>
+
+        {% if categories %}
+            {% for category, products in categories.items() %}
+                <h2>{{ category }}</h2>
+                <div class="row">
+                    {% for product in products %}
+                        <div class="col-md-4">
+                            <div class="card my-2">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ product.name }}</h5>
+                                    <p class="card-text">Price: {{ product.rate_per_unit }}/kg</p>
+                                    <a href="{{ url_for('buy_section', item_name=product.name) }}" class="btn btn-primary">Buy</a>
+                                    <a href="{{ url_for('add_to_cart', item_name=product.name) }}" class="btn btn-secondary">Add to Cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No products available.</p>
+        {% endif %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

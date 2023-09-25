@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Buy Section</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        body {
+            background-image: url('{{ url_for("static", filename="images/bg.png") }}');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            margin-top: 100px;
+        }
+        .btn-centered {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('user_dashboard') }}">User Dashboard</a>
+        <div class="btn-group">
+            <a href="{{ url_for('profile') }}" class="btn btn-secondary">Profile</a>
+            <a href="{{ url_for('cart') }}" class="btn btn-secondary">Cart</a>
+            <a href="{{ url_for('logout_user') }}" class="btn btn-secondary">Logout</a>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+<div class="container">
+    <h2>{{category}} - {{ item_name }}</h2>
+    <p>Availability: {{ availability }}</p>
+    <form id="buy-form" method="post">
+    <div class="form-group">
+        <label for="quantity">Quantity (kg):</label>
+        <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1">
+    </div>
+    <div class="form-group">
+        <label for="price">Price (Rs/kg):</label>
+        <input type="text" id="price" name="price" class="form-control" value="{{ price }}" readonly>
+    </div>
+    <div class="form-group">
+        <label for="total">Total Price:</label>
+        <input type="text" id="total" name="total" class="form-control" readonly>
+    </div>
+    <div class="form-group btn-centered">
+        <input type="submit" value="Buy Now" class="btn btn-primary">
+    </div>
+</form>
+</div>
+<script>
+    $(document).ready(function(){
+        function updateTotal() {
+            const quantity = parseFloat($("#quantity").val());
+            const price = parseFloat($("#price").val());
+            const total = quantity * price;
+            $("#total").val(total.toFixed(2));
+        }
+        updateTotal();  // Run once when the page loads
+        $("#quantity").change(updateTotal);  // Update whenever the quantity changes
+    });
+</script>
+
+</body>
+</html>

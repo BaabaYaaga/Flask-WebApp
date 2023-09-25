@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Summary</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .chart-container {
+            width: 100%;
+        }
+    </style>
+
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">Manager Dashboard</a>
+        <div class="btn-group">
+           <a class="btn btn-secondary" href="{{ url_for('summary') }}">Summary</a>
+            <a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </nav>
+
+<h1>Summary Page</h1>
+    <div class="chart-container">
+        <canvas id="categoryChart" width="400" height="200"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="salesChart" width="400" height="200"></canvas>
+    </div>
+<script>
+    var categoryProductData = {{ category_product_data | tojson }};
+    var categoryLabels = Object.keys(categoryProductData);
+    var datasets = [];
+
+    // Generate unique colors for each product (this is a simple example; you might want a better way to generate colors)
+    var colors = ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 206, 86, 0.2)'];
+    var borderColors = ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 206, 86, 1)'];
+    var productIndex = 0;
+    for (var categoryName in categoryProductData) {
+        var products = categoryProductData[categoryName];
+        for (var i = 0; i < products.length; i++) {
+            var product = products[i];
+
+            // Check if this product already has a dataset
+            var existingDataset = datasets.find(dataset => dataset.label === product.name);
+            if (!existingDataset) {
+                // Create a new dataset for this product
+                existingDataset = {
+                    label: product.name,
+                    data: Array(categoryLabels.length).fill(0),  // Initialize with zeros
+                    backgroundColor: colors[productIndex % colors.length],
+                    borderColor: borderColors[productIndex % colors.length],
+                    borderWidth: 1
+                };
+                datasets.push(existingDataset);
+                productIndex++;
+            }
+
+            // Add the product's quantity to the dataset
+            var categoryIndex = categoryLabels.indexOf(categoryName);
+            existingDataset.data[categoryIndex] = product.quantity;
+        }
+    }
+
+    var ctx1 = document.getElementById('categoryChart').getContext('2d');
+    var categoryChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: categoryLabels,
+            datasets: datasets
+        },
+        options: {
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    stacked: true,
+                },
+                y: {
+                    beginAtZero: true,
+                    stacked: true
+                }
+            }
+        }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('salesChart').getContext('2d');
+
+    // Replace this with the variable you pass from your Flask backend
+    var productData = {{ sales_data|tojson }};
+
+    var productLabels = productData.map(data => data.product);
+    var productQuantity = productData.map(data => data.quantity);
+
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: productLabels,
+            datasets: [{
+                label: 'Products Sold',
+                data: productQuantity,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+
+</body>
+</html>
